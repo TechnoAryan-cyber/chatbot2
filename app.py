@@ -3,14 +3,11 @@ import os
 import google.generativeai as genai
 from flask import Flask, render_template, request, jsonify
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Configure Gemini API
-GOOGLE_API_KEY = "AIzaSyA7wri1ps-zrW4mlCEfh0Ap0XV-3a4Ffc0 "  # Replace with your API key
+GOOGLE_API_KEY = "AIzaSyA7wri1ps-zrW4mlCEfh0Ap0XV-3a4Ffc0 "  
 genai.configure(api_key=GOOGLE_API_KEY)
 
-# Initialize the Gemini model
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 @app.route('/')
@@ -21,7 +18,6 @@ def home():
 def chat():
     user_input = request.form['user_input']
     try:
-        # Send user input to Gemini API
         response = model.generate_content(user_input)
         bot_response = response.text
     except Exception as e:
@@ -29,4 +25,5 @@ def chat():
     return jsonify({'response': bot_response})
 
 if __name__ == '__main__':
-    app.run(debug=True , port=5002)
+    port=int(os.environ.get('PORT', 5004))
+    app.run(debug=False, host='0.0.0.0', port=port)
